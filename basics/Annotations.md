@@ -119,3 +119,102 @@ AlpineJS-Components verfügbar zu machen.
    `alpine:init` nicht greifen!
 4. Die beiden Instanzen greifen beide auf denselben `dropdown` zu, der in
    `app.js` definiert wurde. Genau das war Sinn und Zweck dieser ganzen Übung!
+
+## x-data ohne Daten 
+
+```html
+<!-- Data-Less components -->
+<div x-data @click="console.log('Oh Yeah!')"></div>
+```
+
+Ein sehr einfaches Beispiel. Hier erscheint einfach `x-data` im Element, _ohne_
+ein Datenobjekt. Dafür aber mit einem Event-Handler: `@click`. __Sinn und
+Zweck__ ist hier, den Alpine-Event-Handler möglich zu machen. Ohne `x-data`
+funktioniert das nicht.
+
+## Daten aus dem Store
+
+Das folgende Beispiel nutzt Daten, die im _Alpine Store_ abgelegt wurden. Der
+_Store_ ist in _AlpineJS_ immer vorhanden; er bleibt nur in den meisten Fällen
+leer. Sein Sinn und Zweck ist, Daten _komponenten-übergreifend_ verfügbar zu machen.
+
+```javascript
+// file: app.js
+document.addEventListener("alpine:init", () => { // -1-
+  Alpine.store("currentUser", { // -2-
+    username: 'The Alpinista',
+    posts: ['Post_01', 'Post_02'],
+  });
+});
+```
+
+```html
+<!-- file: index.html -->
+<div x-data x-text="$store.currentUser.username"></div>  <!-- 3 -->
+```
+
+### Anmerkungen
+
+1. Auch der _Store_ muss im `alpine:init`-Hook initialisiert werden, damit wir
+   ihn nutzen können. _Sinn und Zweck:_ Was hier geladen wird, wird integraler
+   Bestandteil der aktuellen AlpineJS-Instanz!
+0. Hier wird im _Store_ das Datenobjekt dem Eintrag `currentUser` zugeordnet.
+   Wir können so wie hier Dutzende Einträge mehr vornehmen; sie müssten nur
+   eine andere _Store ID_ (wie hier `currentUser`) haben.
+0. Mit Hilfe von `$store.currentUser` stehen uns die Daten dann in unserem
+   _AlpineJS_-Component zur Verfügung.
+
+
+## x-init vs x-data
+
+`x-init` initialisiert ein _AlpineJS_-Component, ohne allerdings
+Component-Daten zur Verfügung zu stellen. Das hat gegenüber `x-data` manchmal
+Vorteile.
+
+```html
+<div x-init="console.log('Initializing this component!')"></div>
+```
+
+In diesem Beispiel beginnt _AlpineJS_ gleich nach dem Rendern des Components
+mit einem Eintrag auf der Konsole!
+
+```html
+<div
+  x-data="{
+    init(){
+        console.log('I am initialized')
+    }
+}"
+></div>
+```
+
+In diesem Beispiel wird gleich nach dem Rendern des Components die `init()`
+Methode ausgeführt. Das können wir dafür ausnutzen, Daten mit `fetch()` aus dem
+Netz zu holen und dann in dieses Component einzubauen (vgl. nächstes Beispiel).
+
+```html
+<div
+  x-data="{todo: {}}"
+  x-init="todo = await (await fetch('https://jsonplaceholder.typicode.com/todos/1')).json()"
+>
+  <span x-text="`Todo ID: `+todo.id"></span>
+</div>
+```
+
+Hier passiert genau das, was wir vorher beschrieben haben: Direkt nach dem
+Rendern dieses Components wird mit Hilfe von `fetch()` etwas aus dem Netz
+geholt und dann in `x-data` eingebaut. Mit dem Code aus dem vorigen Beispiel
+würden wir das gleiche so erreichen:
+
+```html
+<div
+  x-data="{
+    // todo: needn't be initialized!
+    async init(){
+        rawData = await fetch('https://jsonplaceholder.typicode.com/todos/1')
+        this.todo = await rawData.json()
+    }
+}"
+></div>
+```
+

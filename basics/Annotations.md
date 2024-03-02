@@ -218,3 +218,78 @@ würden wir das gleiche so erreichen:
 ></div>
 ```
 
+## Scoping
+
+```html
+<div
+  x-data="{
+    name: 'John', 
+    gender: 'male',
+    age: 30
+}"
+>
+  <div x-data="{name: 'Mary', age: 25}">
+    <div x-data="{name: 'Zura'}">
+      <span x-text="name"></span>
+      <span x-text="age"></span>
+      <span x-text="gender"></span>
+    </div>
+  </div>
+</div>
+```
+
+Preisfrage: Welche Werte haben die `<span>`-Elemente? Richtige Antwort: 
+
+```yaml
+name: Zura
+age: 25
+gender: male
+```
+
+Die Regel: _Ein_ `x-data`, _das weiter innen steht, hat höhere Spezifizität,
+und höhere Spezifizität setzt sich immer durch!_
+
+## Getter und Setter
+
+In _AlpinJS_ verwenden wir _Getter,_ um Werte in `x-data` oder im _Store_
+direkt abzugreifen, oder um _abgeleitete Werte_ zu erstellen und verfügbar zu
+machen.
+
+```html
+<div
+  x-data="{
+    open: false,
+    get isOpen() {
+        return this.open;
+    },
+    set isOpen(open) {
+        this.open = open
+    },
+    toggle() {
+        this.isOpen = !this.isOpen;
+    }
+}"
+>
+  <button @click="toggle">Open/Close</button>
+  <div x-show="open">Content</div>
+</div>
+```
+
+Wie man sieht, können wir mit Hilfe der reservierten Wörter `get` und `set`
+Getter und Setter definieren. Eine Sonderrolle spielt `toggle()` – kein Getter
+und kein Setter, sondern eine besondere Methode, die `open` ein- und wieder
+abschaltet.
+
+Im folgenden wird es physikalisch: `x-data` enthält eine Temperatur, die in
+_Celsius_ gespeichert ist. Wir definieren außer dem einfachen Getter (Temperatur
+in Celsius) auch noch Getter für Kelvin und Farenheit. Das wäre ein Beispiel
+dafür, wie man Getter für  _abgeleitete Werte_ definiert.
+
+```html
+<div x-data="{
+    temperature: 28,
+    get celsius() { return this.temperature },
+    get farenheit() { return this.temperature * 9 / 5 + 32 }
+    get kelvin() { return this.temperature + 271 },
+}">
+```

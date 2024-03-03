@@ -1,8 +1,12 @@
 <!-- 
 ```html
-
 ```
 -->
+
+## TODO
+
+- [ ] Lässt sich in der `x-for`-Zählschleife auch ein Offset und ein Limit angeben? 
+
 
 
 ## Beispiel 1: x-data, x-text, x-html
@@ -293,3 +297,224 @@ dafür, wie man Getter für  _abgeleitete Werte_ definiert.
     get kelvin() { return this.temperature + 271 },
 }">
 ```
+
+## x-if vs x-show
+
+`x-if` macht in 95% aller Fälle alles, was auch `x-show` macht. Allerdings
+funktioniert `x-if` nur in einem `<template>`-Element!
+
+```html
+<div x-data="{ open: false }">
+  <button x-on:click="open = ! open">Open/Close</button>
+
+  <template x-if="open">
+    <div>Content</div>
+  </template>
+</div>
+```
+
+In diesem Beispiel wird mit dem Button die _Alpine_-Variable `open` ein- und
+ausgeschaltet. Das `<template>` reagiert mit `x-if` auf diesen Zustand und wird
+angezeigt oder versteckt.
+
+_Technisch betrachtet_ geht `x-if` auch ganz anders mit seinem Element um als
+`x-show`:
+
+1. Bei `x-if` werden alle „children“ innerhalb des `<template>`-Elements aus
+   dem DOM gelöscht, bei `x-show` bleiben sie im DOM erhalten; sie werden nur
+   nicht mehr angezeigt.
+0. Bei `x-if` bleiben die _Styles_ (CSS) so wie sie sind, bei `x-show` bekommt
+   das Element ein `style='display:none'` angehängt, so dass der Browser es
+   nicht mehr anzeigt.
+
+Das ist auch der Grund, warum _transitions_ und _Animationen_ bei `x-if`
+nicht funktionieren: Beide sind abhängig von CSS – aber wie soll CSS greifen,
+wenn die Elemente gar nicht mehr im DOM vorhanden sind?
+
+## x-for als Listenschleife
+
+Schleifen mit x-for gehören zum Elementarsten, das _AlpineJS_ zu bieten hat.
+Mit Hilfe dieses Konstrukts kann man nämlich Datenlisten in HTML umformen.
+
+```html
+<div
+  x-data="{
+    posts: [
+      { id: 1, title: 'title 1' }, 
+      { id: 2, title: 'title 2' },
+    ]
+  }"
+>
+  <template x-for="(post, index) in posts" :key="post.id">
+    <h2 x-text="post.id + '. ' + post.title"></h2>
+  </template>
+</div>
+```
+
+Dieses Beispiel enthält alle Elemente, die für die Arbeit mit `x-for` wichtig sind: 
+
+1. `<template>`: Auch `x-for` funktioniert nur innerhalb einer
+   `<template>`-Umgebung. Alles innerhalb dieser Umgebung wird schleifenweise
+   wiederholt.
+0. `x-for="(post, index)"`: Bei _AlpineJS_ gehört die Index-Nummer immer zum
+   Service dazu. Das aktuelle Listenelement landet in diesem Beispiel in der
+   Variablen `post`, die aktuelle Indexnummer in der Variablen `index`. Für
+   _AlpineJS_ ist es einerlei, welche Variablennamen wir hier wählen. Auch
+   `x-for="(zing, boff)"` würde funktionieren – solange wir innerhalb des
+   `<template>`-Elements mit den gewählten Variablennamen arbeiten (und die
+   Indexnummer kann auch fehlen).
+0. `:key="post.id"`. Das bedeutet übersetzt so viel wie `"ORDER BY post.id"`.
+   Ohne diese Angabe ist die Reihenfolge der Listen-Elemente nicht
+   vorhersagbar, weil sie technisch auf ein `"ORDER BY memory_address"`
+   hinausläuft. Das hängt einfach damit zusammen, wie JavaScript die Daten im
+   Speicher organisiert. (Hier als _Linked List_ mit Pointern zu den einzelnen
+   Element-Objekten. Sobald sich bei diesem Gebilde irgendwas ändert, ändern
+   sich auch einige Speicheradressen, und dann ändert sich die Reihenfolge der
+   angezeigten Elemente.)
+
+## x-for als Zählschleife
+
+Mit `x-for` lässt sich in _AlpineJS_ auch eine Zählschleife implementieren. Das
+folgende Beispiel zeigt, wie es geht.
+
+```html
+<div x-data>
+  <template x-for="n in 10">
+    <p x-text="n"></p>
+  </template>
+</div>
+```
+
+Auch hier muss `x-for` für ein `<template>`-Element implementiert werden. Die
+Syntax ist Python nachempfunden. Die Ausgabe ist eine Kette von Absätzen, die
+von 1 bis 10 durchnumeriert sind.
+
+## CSS-Klassen ändern mit x-bind
+
+```html
+<style>
+  .red {
+    background-color: red;
+  }
+  .green {
+    background-color: green;
+  }
+</style>
+<div x-data="{clicked: false}"> <!-- 1 -->
+  <button
+    class="red"                 
+    x-bind:class="clicked ? 'clicked' : ''"
+    @click="clicked = !clicked"
+  >                             <!-- 2,3 -->
+    Click me
+  </button>
+</div>
+```
+
+#### Anmerkungen:
+
+1. Ganz einfache Initialisierung von `clicked`
+0. `x-bind:class="..."` ist zu übersetzen mit: _„Wenn_ `clicked===true`,
+   füge die CSS-Klasse_ `green` _den CSS-Klassen dieses Elements hinzu,
+   andernfalls füge den Leerstring hinzu._ Das ist ein ganz schnöder _ternary
+   operator_ in Aktion.
+0. Da in CSS das Spätere das Frührere abrogiert, abrogiert `green` die Klasse
+   `red` und der Button wird grün.
+0. `@click="clicked=!clicked"` macht den Button zu einem Toggle.
+
+Beachte, dass alle Aktionen auf dieses Component reduziert sind.
+
+### CSS-Klassen mit „Schaltobjekten“ manipulieren
+
+```html
+<style>
+  .red {
+    background-color: red;
+  }
+  .green {
+    background-color: green;
+  }
+</style>
+<div x-data="{clicked: false}">
+  <button 
+    class="yellow" 
+    :class="{'green': clicked}" 
+    @click="clicked = !clicked"
+  >
+    Click me
+  </button>
+</div>
+```
+
+Dieses Beispiel arbeitet genau so wie das Vorangehende, nur dass wir hier ein
+„Schaltobjekt“ in Aktion sehen.
+
+#### Anmerkungen
+
+1. `:class` ist eine Kurzform für `x-bind:class`
+0. `{'green': clicked}` bedeutet übersetzt: _Füge die CSS-Klasse_ `green`
+   _hinzu, FALLS_ `clicked===true` _ist._
+0. `@click="clicked=!clicked"` macht den Button zu einem Toggle.
+
+Das ist das besondere am Umgang mit Klassen bei _AlpineJS_. Anders als in der
+Dokumentation ausdrücklich angegeben, werden CSS-Klassen im Bedarfsfall an die
+Klassenliste angefügt oder wieder entfernt.
+
+> [!warning]
+> Die AlpineJS-Dokumentation ist an einer entscheidenden Stelle __irreführend:__
+> “When using object-syntax, Alpine will NOT [sic!] preserve original classes
+> applied to an element's class attribute.”
+> ([Quelle](https://alpinejs.dev/directives/bind#class-object-syntax))
+> [Weiter unten](https://alpinejs.dev/directives/bind#special-behavior)
+> korrigieren sie diese Aussage dann selbst – mit stolz geschwellter Brust.
+>
+> Wahrscheinlich meinen sie: “When using object-syntax, Alpine will NOT
+> replace [!!!] original classes applied to an element's class attribute.”
+    
+## Dynamische Inline-Styles mit x-bind:style
+
+Im folgenden Beispiel geschieht die Um-Formatierung mit Hilfe eines neuen
+Inline-Styles:
+
+```html
+<div x-data="{clicked: false}">
+  <button
+    style="color:navy"
+    :style="clicked && {'backgroundColor': 'red'}"
+    @click="clicked = !clicked"
+  >
+    Click me
+  </button>
+</div>
+```
+
+1. `:style` ist nur eine Kurzform für `x-bind:style`.
+2. `clicked && {'backgroundColor': 'red'}`
+    - `&&` macht das folgende abhängig vom `clicked`-Wert.
+    - `backgroundColor` ist eine JavaScript-Umschreibung für das in CSS übliche
+      `background-color`, denn in _Object Keys_ dürfen außer dem Unterstrich
+      keine Striche vorkommen!
+    - wenn `clicked===false` ist, wird der Style zu `style="false"`. (Ganz
+      logisch, eigentlich ...)
+
+Das bedeutet, dass die Einstellung `color:navy` __im Browser nie ankommt!__
+
+Das folgende Beispiel zeigt, wie man `color:navy` allerdings tasächlich
+anzeigen kann:
+
+```html
+<div x-data="{clicked: false}">
+  <button
+    :style="{backgroundColor: clicked ? 'red' : ''}"
+    @click="clicked = !clicked"
+    style="color:navy"
+  >
+    Click me
+  </button>
+</div>
+```
+Aha! Der _ternary operator_ bewahrt die bestehenden `style`-Einstellungen
+und fügt die neuen hinzu! Warum: Weil hier die neuen Einstellungen _nicht_
+abhängig sind vom bestehenden `clicked`-Wert, der im oberen Beispiel als
+einziger übrig bleibt, wenn er `false` ist – und durch die neue
+Hintergrundfarbe vollständig ersetzt wird, im anderen Fall.

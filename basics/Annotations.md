@@ -602,28 +602,30 @@ Ereignis-Funktionen, die _AlpineJS_ zur Verfügung stellt:
 
 #### Anmerkungen:
 
-1. Bei `@click` „wrappt“ _AlpineJS_ den angegebenen Code in einem neu
-   erstellten
-   [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE?retiredLocale=de).
-   Deshalb können wir auch Javascript-Code hier mit hineinnehmen.
+1. Beim Hoisting speichert der Browser den angegebenen Code in einem neu
+   erstellten Funktions-Objekt, den er dann als _Callback_ ausführt. Deshalb
+   können wir auch Javascript-Code hier mit hineinnehmen, und der würde dann
+   ausgeführt werden.
 2. `@keyup.enter` bedeutet: "Sobald die ENTER-Taste sich wieder hebt ...". Das
    ist extrem hilfreich bei einem Eingabefeld wie hier!
 3. `@dispatch`
     3.1. `@click=$dispatch('yoohoo')`. Hier wird ein [Custom
-        Event](https://alpinejs.dev/magics/dispatch) mit dem Name `yoohoo`
-        abgelassen.
-   3.2. `@yoohoo`. Hier wird das abgelassene `yoohoo`-Signal „eingefangen“ und
-       ausgewertet.
+         Event](https://alpinejs.dev/magics/dispatch) mit dem Namen `yoohoo`
+         abgelassen.
+    3.2. `@yoohoo`. Hier wird das abgelassene `yoohoo`-Signal „eingefangen“ und
+         ausgewertet.
 4. „Modal“ ist alles, was erscheint und wieder verschwindet, wenn man es
    wegklickt. Deshalb gilt:
-   4.1. Der Button sorgt dafür, dass das Modal erscheint
-   4.2. `modal` ist ein _switch_ in `x-data`
+    4.1. Der Button sorgt dafür, dass das Modal erscheint
+    4.2. `modal` ist ein _switch_ in `x-data`
 5. `@click.outside` bedeutet: _Wenn ein Klick außerhalb des Modals erfolgt..._
-   Ja, sowas geiles gibt es in _AlpineJS!_
+    Ja, sowas geiles gibt es in _AlpineJS!_
 6. `@keyup.once` bedeutet: Nur beim ersten Mal reagiert dieses Element auf
    `@keyup`. Sonst nicht!
 7. `@keyup.debounce.1000` bedeutet: _Erst wenn 1000 Millisekunden nicht mehr
    getippt wird, wird das `keyup`-Ereignis ausgewertet._ Das ist z.B. nützlich
    für automatische Suchfelder oder auch für `@scroll`-Ereignisse (Erst wenn
-   1000ms nicht mehr gescrollt wird, ...).
-   Ohne Zeitangabe geht _AlpineJS_ von 250ms aus.
+   1000ms nicht mehr gescrollt wird, ...). Ohne ausdrückliche Zeitangabe geht
+   _AlpineJS_ von 250ms aus.
+
+

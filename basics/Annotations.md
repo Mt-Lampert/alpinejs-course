@@ -786,7 +786,7 @@ verbergen kann.
   <button @click="open = !open">Open/Close</button>  <!-- 3 -->
   <div x-show="open" x-cloak>Modal Content...</div>  <!-- 2 -->
 </div>
-<style>                                              <!-- 1 -->
+<style>                                              /*-- 1 --*/
   [x-cloak] {
     display: none !important;
   }
@@ -805,5 +805,43 @@ verbergen kann.
    `open` und schaltet das `[x-cloak]`-CSS ab.
 
 _Tadaaa!_
+
+## DOM-Elemente verschieben mit x-teleport
+
+Manchmal wollen wir, dass DOM-Elemente nicht dort im Browser erscheinen, wo wir
+sie im Markup hinschreiben. Dass wir sie überhaupt dorthin schreiben, ist nötig, 
+damit sie Teil des _Alpine_-Components werden, über das wir sie steuern wollen.
+Dann aber muss _AlpineJS_ sie _teleportieren._
+
+```html
+<div x-data>
+  <p>Some Content</p>
+
+  <div x-data="{open: false}">
+    <button @click="open=!open">Open Modal</button>
+    <template x-teleport="body">
+      <div x-show="open">Modal Content</div>
+    </template>
+  </div>
+
+  <p>More Content</p>
+</div>
+```
+
+#### Anmerkungen
+
+1. `x-teleport` funktioniert nur in einem `<template>`-Element. Das bedeutet,
+   dass `x-teleport` sich auf alles bezieht, was sich _innerhalb_ dieses
+   `<template>`-Elements befindet.
+2. `x-teleport="body"` ist zu lesen als: _„Verschiebe alles innerhalb dieses_
+   `<template>`_-Elements an das Ende von_ `<body>`_.“_
+3. `x-show` macht das _Modal_ sichtbar oder unsichtbar.
+
+Der `teleport`-Selektor (hier '`body`') kann dabei alles sein, das von
+`document.querySelector()` akzeptiert wird. Wenn mehrere Elemente passen,
+bekommt der zuerst gefundene den Zuschlag.
+
+_Schön zu wissen:_ mit `x-teleport` funktionieren auch eingebettete Modals.
+Mehr dazu [hier](https://alpinejs.dev/directives/teleport#nesting).
 
 

@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alpine.js Course</title>
 
+    <link rel="stylesheet" href="missing.min.css"></link>
     <script
       defer
       src="/assets/alpinejs.min.js"
     ></script>
     <script src="app.js"></script>
+
   </head>
   <body>
     <!-- x-data, x-text, x-html -->
@@ -163,62 +165,69 @@
 
 
     <!-- x-bind: style -->
-    <div x-data="{clicked: false}">
-      <button
-        :style="clicked && {'backgroundColor': 'red'}"
-        @click="clicked = !clicked"
-        style="color:navy"
-      >
-        Click me
-      </button>
-    </div>
+    <!-- <div x-data="{clicked: false}"> -->
+    <!--   <button -->
+    <!--     :style="clicked && {'backgroundColor': 'red'} || {'backgroundColor': ''}" -->
+    <!--     @click="clicked = !clicked" -->
+    <!--     style="color:navy" -->
+    <!--   > -->
+    <!--     Click me -->
+    <!--   </button> -->
+    <!-- </div> -->
 
-    <div x-data="{clicked: false}">
-      <button
-        :style="{backgroundColor: clicked ? 'red' : ''}"
-        @click="clicked = !clicked"
-        style="color:navy"
-      >
-        Click me
-      </button>
-    </div>
+    <!-- <div x-data="{clicked: false}"> -->
+    <!--   <button -->
+    <!--     :style="{backgroundColor: clicked ? 'red' : ''}" -->
+    <!--     @click="clicked = !clicked" -->
+    <!--     style="color:navy" -->
+    <!--   > -->
+    <!--     Click me -->
+    <!--   </button> -->
+    <!-- </div> -->
 
-    <!-- x-bind id -->
+
+    <!-- x-bind id                                   01:01:50 -->
+    <!-- <div x-data="{id: 0}"> --> 
     <!-- <button -->
-    <!--   x-data="{id: ''}" -->
     <!--   x-bind:id="id" -->
     <!--   @click="id = Math.round(Math.random() * 10000)" -->
     <!-- > -->
-    <!--   Random id -->
+    <!--   Get ID -->
     <!-- </button> -->
+    <!--   <p>The ID is now ''<span x-text="id"></span>''</p> -->
+    <!-- </div> -->
 
-    <!-- <!-1- Challenge -1-> -->
-    <!-- <div x-data="{colors: ['red', 'green', 'blue']}"> -->
+
+<!-- HERE WE ARE!! -->
+
+
+    <!-- Challenge -->
+    <!-- <div x-data="{colors: ['black', 'white', 'red']}"> -->
     <!--   <!-1- Iterate over colors and display 40x40 px boxes with given colors -1-> -->
     <!--   <template x-for="color in colors"> -->
     <!--     <div -->
-    <!--       style="width: 40px; height: 40px; display: inline-block" -->
+    <!--       style="width: 40px; height: 40px; display: inline-block;" -->
     <!--       :style="{backgroundColor: color}" -->
     <!--     ></div> -->
     <!--   </template> -->
     <!-- </div> -->
 
     <!-- x-on -->
-    <!-- <div x-data @edit="console.log('Edit Clicked')"> -->
-    <!--   <button @click="console.log('Button 1')">Button 1</button> -->
-    <!--   <input type="text" @keyup.enter="console.log('Submit')" /> -->
-    <!--   <button @click="$dispatch('edit')">Edit</button> -->
+    <div x-data @edit="console.log('Edit Clicked')">
+      <button @click="console.log('Button 1')">Button 1</button>
+      <input type="text" @keyup.enter="console.log('Submitted!')" />
+      <button @click="$dispatch('edit')">Edit</button>
 
-    <!--   <div x-data="{modal: false}"> -->
-    <!--     <button @click="modal = true">Show Modal</button> -->
-    <!--     <div x-show="modal" @click.outside="modal = false"> -->
-    <!--       Modal Content... -->
-    <!--     </div> -->
-    <!--   </div> -->
+      <div x-data="{modal: false}">
+        <button @click="modal = true">Show Modal</button>
+        <div x-show="modal" @click.outside="modal = false">
+          Modal Content...
+        </div>
+      </div>
 
-    <!--   <input type="text" @keyup.once="console.log('Typed')" /> -->
-    <!--   <input type="text" @keyup.debounce="console.log('With Debounce')" /> -->
-    <!-- </div> -->
+      <input type="text" @keyup.once="console.log('Typed')" />
+      <input type="text" @keyup.debounce="console.log('With Debounce')" />
+    </div>
 
     <!-- x-model -->
     <!-- <div x-data="{keyword: null}"> -->

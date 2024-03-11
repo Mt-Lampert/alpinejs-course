@@ -497,7 +497,8 @@ Inline-Styles:
     - wenn `clicked===false` ist, wird der Style zu `style="false"`. (Ganz
       logisch, eigentlich ...)
 
-Das bedeutet, dass die Einstellung `color:navy` __im Browser nie ankommt!__
+Das bedeutet, dass die Einstellung `color:navy` __im Browser nur dann ankommt,
+wenn__ `clicked===true` __ist!__
 
 Das folgende Beispiel zeigt, wie man `color:navy` allerdings tasächlich
 anzeigen kann:
@@ -514,7 +515,115 @@ anzeigen kann:
 </div>
 ```
 Aha! Der _ternary operator_ bewahrt die bestehenden `style`-Einstellungen
-und fügt die neuen hinzu! Warum: Weil hier die neuen Einstellungen _nicht_
+und fügt die neuen hinzu! Warum? Weil hier die neuen Einstellungen _nicht_
 abhängig sind vom bestehenden `clicked`-Wert, der im oberen Beispiel als
 einziger übrig bleibt, wenn er `false` ist – und durch die neue
 Hintergrundfarbe vollständig ersetzt wird, im anderen Fall.
+
+Und nun zum guten Schluss die Auflösung dafür, wie man das erste Beispiel
+umschreiben muss, damit es auch mit `&&` funktioniert:
+
+```html
+<div x-data="{clicked: false}">
+  <button
+    style="color:navy"
+    :style="clicked && {'backgroundColor': 'red'}" || {'backgroundColor': ''}
+    @click="clicked = !clicked"
+  >
+    Click me
+  </button>
+</div>
+```
+
+Was hat sich hier geändert? `clicked` ist hier nur noch Schalter, nicht auch
+noch `style`-Wert: bei `true` wird der Hintergrund rot, bei `false` kommt nur
+der Leerstring zu den bestehenden `style`-Einstellungen hinzu. Der Wert `false`
+wird hier nie als `style`-Wert in Erscheinung treten!
+
+## Automatische Updates mit x-bind
+
+`x-bind` kann dafür genutzt werden, in einem Component automatisch Werte auf
+den neuesten Stand zu bringen.
+
+```html
+<div x-data="{id: 0}">                                <!-- 1 -->
+<button
+  x-bind:id="id"
+  @click="id = Math.round(Math.random() * 10000)"     <!-- 2 -->
+>
+  Get ID
+</button>
+  <p>The ID is now ''<span x-text="id"></span>''</p>  <!-- 3 -->
+</div>
+```
+
+Dieses Muster kommt in der Praxis extrem häufig vor:
+
+1. Der Wert wird initialisiert
+2. Der Wert wird auf ein Ereignis hin erneuert (hier als vierstellige Zufallszahl)
+3. Der Wert wird angezeigt.
+
+## Übung: Fahnenspiel
+
+```html
+<div x-data="{colors: ['black', 'white', 'red']}">
+  <!-- Iterate over colors and display 40x40 px boxes with given colors -->
+  <template x-for="color in colors">
+    <div
+      style="width: 40px; height: 40px; display: inline-block;"
+      :style="{backgroundColor: color}"
+    ></div>
+  </template>
+</div>
+```
+
+## Ereignisse (wichtige Beispiele)
+
+Die folgenden Beispiele zeigen exemplarisch einige sehr wichtige
+Ereignis-Funktionen, die _AlpineJS_ zur Verfügung stellt:
+
+```html
+<div x-data @yoohoo="console.log('yoohoo Clicked')">       <!-- 3.2 -->
+  <button @click="console.log('Button 1')">Button 1</button>      <!-- 1 -->
+  <input type="text" @keyup.enter="console.log('Submitted!')" />  <!-- 2 -->
+  <button @click="$dispatch('yoohoo')">yoohoo</button>                <!-- 3.1 -->
+
+  <div x-data="{modal: false}">                         <!-- 4.2 -->
+    <button @click="modal = true">Show Modal</button>             <!-- 4.1 -->
+    <div x-show="modal" @click.outside="modal = false">           <!-- 5 -->
+      Modal Content...
+    </div>
+  </div>
+
+  <input type="text" @keyup.once="console.log('Typed')" />         <!-- 6 -->
+  <input type="text" @keyup.debounce.1000="console.log('With Debounce')" /> <!-- 7 -->
+</div>
+```
+
+#### Anmerkungen:
+
+1. Bei `@click` „wrappt“ _AlpineJS_ den angegebenen Code in einem neu
+   erstellten
+   [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE?retiredLocale=de).
+   Deshalb können wir auch Javascript-Code hier mit hineinnehmen.
+2. `@keyup.enter` bedeutet: "Sobald die ENTER-Taste sich wieder hebt ...". Das
+   ist extrem hilfreich bei einem Eingabefeld wie hier!
+3. `@dispatch`
+    3.1. `@click=$dispatch('yoohoo')`. Hier wird ein [Custom
+        Event](https://alpinejs.dev/magics/dispatch) mit dem Name `yoohoo`
+        abgelassen.
+   3.2. `@yoohoo`. Hier wird das abgelassene `yoohoo`-Signal „eingefangen“ und
+       ausgewertet.
+4. „Modal“ ist alles, was erscheint und wieder verschwindet, wenn man es
+   wegklickt. Deshalb gilt:
+   4.1. Der Button sorgt dafür, dass das Modal erscheint
+   4.2. `modal` ist ein _switch_ in `x-data`
+5. `@click.outside` bedeutet: _Wenn ein Klick außerhalb des Modals erfolgt..._
+   Ja, sowas geiles gibt es in _AlpineJS!_
+6. `@keyup.once` bedeutet: Nur beim ersten Mal reagiert dieses Element auf
+   `@keyup`. Sonst nicht!
+7. `@keyup.debounce.1000` bedeutet: _Erst wenn 1000 Millisekunden nicht mehr
+   getippt wird, wird das `keyup`-Ereignis ausgewertet._ Das ist z.B. nützlich
+   für automatische Suchfelder oder auch für `@scroll`-Ereignisse (Erst wenn
+   1000ms nicht mehr gescrollt wird, ...).
+   Ohne Zeitangabe geht _AlpineJS_ von 250ms aus.

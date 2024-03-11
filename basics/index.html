@@ -213,21 +213,21 @@
     <!-- </div> -->
 
     <!-- x-on -->
-    <div x-data @edit="console.log('Edit Clicked')">
-      <button @click="console.log('Button 1')">Button 1</button>
-      <input type="text" @keyup.enter="console.log('Submitted!')" />
-      <button @click="$dispatch('edit')">Edit</button>
+    <!-- <div x-data @edit="console.log('Edit Clicked')"> -->
+    <!--   <button @click="console.log('Button 1')">Button 1</button> -->
+    <!--   <input type="text" @keyup.enter="console.log('Submitted!')" /> -->
+    <!--   <button @click="$dispatch('edit')">Edit</button> -->
 
-      <div x-data="{modal: false}">
-        <button @click="modal = true">Show Modal</button>
-        <div x-show="modal" @click.outside="modal = false">
-          Modal Content...
-        </div>
-      </div>
+    <!--   <div x-data="{modal: false}"> -->
+    <!--     <button @click="modal = true">Show Modal</button> -->
+    <!--     <div x-show="modal" @click.outside="modal = false"> -->
+    <!--       Modal Content... -->
+    <!--     </div> -->
+    <!--   </div> -->
 
-      <input type="text" @keyup.once="console.log('Typed')" />
-      <input type="text" @keyup.debounce="console.log('With Debounce')" />
-    </div>
+    <!--   <input type="text" @keyup.once="console.log('Typed')" /> -->
+    <!--   <input type="text" @keyup.debounce="console.log('With Debounce')" /> -->
+    <!-- </div> -->
 
     <!-- x-model -->
     <!-- <div x-data="{keyword: null}"> -->
@@ -255,11 +255,11 @@
     <!-- </div> -->
 
     <!-- <!-1- x-effect -1-> -->
-    <!-- <div x-data="{name: 'Zura', message: null}"> -->
-    <!--   <p x-effect="message = 'Hello ' + name"></p> -->
-    <!--   <p x-text="message"></p> -->
-    <!--   <button @click="name= 'John'">Change Name</button> -->
-    <!-- </div> -->
+    <div x-data="{name: 'Zura', message: null}">
+      <p x-effect="message = 'Hello ' + name"></p>
+      <p x-text="message"></p>
+      <button @click="name= 'John'">Change Name</button>
+    </div>
 
     <!-- x-ignore -->
     <!-- <div x-data="{name: 'Zura'}"> -->

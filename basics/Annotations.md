@@ -628,4 +628,85 @@ Ereignis-Funktionen, die _AlpineJS_ zur Verfügung stellt:
    1000ms nicht mehr gescrollt wird, ...). Ohne ausdrückliche Zeitangabe geht
    _AlpineJS_ von 250ms aus.
 
+## Double Binding mit x-model
 
+_Double Binding_ ist eine extrem wichtige Technologie, wenn es um moderne
+Interaktionen im Netz geht.
+
+Was geschieht hier doppelt? Antwort: Erstens _Einlesen_ und zweitens
+_Auswerten._ Das folgende Beispiel macht das Prinzip klar:
+
+```html
+<div x-data="{keyword: null}">         <!-- 1 -->
+  <input                               <!-- 2 -->
+    type="text"
+    placeholder="Search for items"
+    x-model.debounce.500ms="keyword"
+  />
+  <p x-text="keyword"></p>             <!-- 3 -->
+</div>
+```
+
+#### Anmerkungen
+
+1. `keyword` ist die gespeicherte Information
+2. `x-model.debounce.500ms="keyword"`: Hier findet das _Double Binding_ statt:
+   Jede Änderung wird __unmittelbar__ (standardmäßig) dem gesamten
+   _AlpineJS_-Component zur Verfügung gestellt und sorgt ebenso unmittelbar für
+   ein Re-Rendering desselben. Nicht in diesem Fall allerdings: wegen
+   `.debounce.500ms` wird das Update erst nach einer halben Sekunde nach dem
+   letzten Ändern vollzogen. Ein wirklich unmittelbares Update würde für zu
+   viel Unruhe sorgen – im Browser und für den Benutzer.
+3. Hier landet der neue Eintrag in der Ausgabe.
+
+## Aufgabe: x-model in Aktion:
+
+```html
+<!-- 
+Challenge: Create a button and 3 inputs. 
+1st input for text. Whatever you write inside 
+    the input that should become the text of the button.
+2nd input for background color. Whatever you type color 
+    inside the input and that will become the background color
+    for the button.
+3rd input for button id. Whatever you type inside will become 
+    thebutton id
+-->
+<div x-data="{text: null, bg: null, id: null}">
+    <button 
+      :id="id" 
+      :style="{backgroundColor: bg}" 
+      x-text="text">
+    </button>
+    <br>
+    <input type="text" x-model="text" placeholder="Text">
+    <input type="text" x-model="bg" placeholder="bg color">
+    <input type="text" x-model="id" placeholder="ID">
+</div>
+```
+
+Der entscheidende Trick ist: _Alle Daten nach_ `x-data`! Dann geht mit
+`x-model` im Grunde alles von selbst.
+
+## Abhängige Werte mit x-effect
+
+Es gibt Werte, die sind abhängig von anderen Werten. Mit `x-effect` können wir
+sie erstellen und kontrollieren.
+
+```html
+<div x-data="{name: 'Zura', message: null}">  
+  <p x-effect="message = 'Hello ' + name"></p>       <!-- 1 -->
+  <p x-text="message"></p>
+  <button @click="name= 'John'">Change Name</button> <!-- 2 -->
+</div>
+```
+
+#### Anmerkungen
+
+1. Der einzige Daseinszweck dieses `<p>`-Elements ist `x-effect`, d.h.
+   `message` „automatisch“ einen neuen Wert zu geben. (So ist das, wenn
+   Javascript mitten im HTML passieren muss ...)
+2. Sobald der Button geklickt wird, ändert sich `name` zu `John`. Dank
+   `x-effect` ändert sich dadurch `message` als abhängiger Wert zu '`Hello
+   John`'.
+   

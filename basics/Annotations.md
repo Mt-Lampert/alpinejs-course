@@ -709,4 +709,101 @@ sie erstellen und kontrollieren.
 2. Sobald der Button geklickt wird, ändert sich `name` zu `John`. Dank
    `x-effect` ändert sich dadurch `message` als abhängiger Wert zu '`Hello
    John`'.
-   
+
+## Abhängiger Code mit x-effect
+
+`x-effect` lässt sich auch dafür einsetzen, um „automatisch“ Code auszuführen,
+sobald eine Variable sich ändert. Man spricht hier von _abhängigem Code._
+
+Das folgende Beispiel zeigt, worum es geht:
+
+```html
+<div x-data="{ label: 'Hello' }" x-effect="console.log(label)">
+  <button @click="label += ' World!'">Change Message</button>
+</div>
+```
+
+Wenn dieses Component geladen wird, wird auch der `x-effect`-Teil ausgeführt
+und “Hello” erscheint auf der Konsole.
+
+Wenn dann `label` durch den Button aktualisiert wird, wird als „Nebeneffekt“
+auch noch einmal `x-effect` ausgeführt, und dieses Mal erscheint dann “Hello
+World!” auf der Konsole.
+
+## x-data ignorieren mit x-ignore
+
+Manchmal gibt es Bereiche, wo die magischen Daten in `x-data` einfach
+unerwünscht sind – z.B. wenn über HTMX Markup hereinkommt, das __nicht__ sofort
+von _AlpineJS_ erfasst und verarbeitet werden soll. In einem solchen Fall lohnt
+sich `x-ignore`. Wie es funktioniert, zeigt das folgende Beispiel:
+
+```html
+<div x-data="{name: 'Zura'}">
+  <div x-ignore>
+    <p x-text="name">No 'name' here!</p>
+  </div>
+</div>
+```
+
+Hier wird `x-text` im `<p>` ausdrücklich ignoriert – wegen `x-ignore` im
+Parent-Element.
+
+## DOM-Elemente herauspicken mit x-ref
+
+Wenn wir auf Kommando DOM-Elemente mit _AlpineJS_ manipulieren wollen, lohnt
+sich `x-ref`, um sie anzusteuern:
+
+```html
+<div x-data>
+  <input x-ref="inputEmail" type="text" placeholder="Email" /> <!-- 1 -->
+  <button @click="$refs.inputEmail.style.borderColor='red'">   <!-- 2 -->
+    Check
+  </button>
+</div>
+```
+
+#### Anmerkungen
+
+1. `x-ref` sorgt dafür, dass genau dieses Element mit Hilfe von `inputEmail`
+   als „ID“ angesteuert werden kann.
+2. `$refs.inputEmail` steuert jetzt genau das gekennzeichnete DOM-Element an
+   und verändert dessen `style` – wieder mit _camelCase_-Notation, wie man das
+   in Javascript halt so macht.
+
+## Unerwünschte Effekte mit x-cloak ausschalten
+
+Wir alle haben schon mal erlebt, dass verborgene DOM-Elemente beim Aufbau einer
+Webseite kurz „aufblitzen“, bevor sie gleich darauf wieder verschwinden.
+
+Woran liegt das? Es liegt daran, dass der Browser die Seite vollständig
+darstellt, bevor _AlpineJS_ initialisiert ist und diese Elemente wieder
+verbergen kann.
+
+`x-cloak` hilft in diesen Fällen.
+
+```html
+<div x-data="{open: false}">
+  <button @click="open = !open">Open/Close</button>  <!-- 3 -->
+  <div x-show="open" x-cloak>Modal Content...</div>  <!-- 2 -->
+</div>
+<style>                                              <!-- 1 -->
+  [x-cloak] {
+    display: none !important;
+  }
+</style>
+```
+
+#### Anmerkungen
+
+1. `x-cloak` kann nur greifen, wenn das zu verbergende Element entsprechend
+   vorbereitet wurde – so wie hier im `<style>`-Abschnitt geschehen, d.h. mit
+   einem `[x-cloak]`-Selector im CSS und `display: none`. Damit sorgt der
+   _Browser_ von vornherein dafür, dass dieses Element nicht angezeigt wird!
+2. `x-cloak` wendet den Style auf genau dieses Element an und wartet auf das
+   `open`-Signal.
+3. Beim Klick ändert sich `open`, `x-show` reagiert auf den neuen Wert von
+   `open` und schaltet das `[x-cloak]`-CSS ab.
+
+_Tadaaa!_
+
+

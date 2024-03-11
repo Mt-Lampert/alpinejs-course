@@ -255,16 +255,16 @@
     <!-- </div> -->
 
     <!-- <!-1- x-effect -1-> -->
-    <div x-data="{name: 'Zura', message: null}">
-      <p x-effect="message = 'Hello ' + name"></p>
-      <p x-text="message"></p>
-      <button @click="name= 'John'">Change Name</button>
-    </div>
+    <!-- <div x-data="{name: 'Zura', message: null}"> -->
+    <!--   <p x-effect="message = 'Hello ' + name"></p> -->
+    <!--   <p x-text="message"></p> -->
+    <!--   <button @click="name= 'John'">Change Name</button> -->
+    <!-- </div> -->
 
     <!-- x-ignore -->
     <!-- <div x-data="{name: 'Zura'}"> -->
     <!--   <div x-ignore> -->
-    <!--     <p x-text="name"></p> -->
+    <!--     <p x-text="name">No 'name' info here!</p> -->
     <!--   </div> -->
     <!-- </div> -->
 
@@ -275,15 +275,15 @@
     <!-- </div> -->
 
     <!-- x-cloak -->
-    <!-- <div x-data="{open: false}"> -->
-    <!--   <button @click="open = !open">Open/Close</button> -->
-    <!--   <div x-show="open" x-cloak>Modal Content...</div> -->
-    <!-- </div> -->
-    <!-- <style> -->
-    <!--   [x-cloak] { -->
-    <!--     display: none !important; -->
-    <!--   } -->
-    <!-- </style> -->
+    <div x-data="{open: false}">
+      <button @click="open = !open">Open/Close</button>
+      <div x-show="open" x-cloak>Modal Content...</div>
+    </div>
+    <style>
+      [x-cloak] {
+        display: none !important;
+      }
+    </style>
 
     <!-- x-teleport -->
     <!-- <div x-data> -->

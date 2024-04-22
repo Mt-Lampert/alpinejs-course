@@ -869,4 +869,53 @@ beide sich selbst mit `$el` verfügbar machen. `$el` liefert die Referenz auf ei
 Verweis auf oben: Wie man mit `$ref` [DOM-Elemente kennzeichnet]() und sie
 ansteuert.
 
+## `$watch`
+
+> [!abstract]
+> Mit Hilfe der `$watch()`-Funktion lassen sich _Alpine_-interne
+> Wert-Änderungen nachverfolgen und bei Bedarf auch darauf mit JavaScript
+> reagieren.
+
+### Beispiel
+
+```html
+<script>
+  // -1-
+  function logModal(curValue, oldValue) {
+    console.log(`'modal' changed from '${oldValue}' to '${curValue}'`)
+  }
+</script>
+<div
+  x-data="{modal: false}"
+  x-init="$watch('modal', (cur, old) => logModal(cur, old))"
+> <!-- -2,3,4- -->
+  <button @click="modal = !modal">$watch example</button>
+</div>
+```
+
+#### Anmerkungen
+
+1. Hier wird extra eine Log-Funktion definiert, um die `x-init`-Zeile von
+   Verwirrung mit Satzzeichen zu entlasten – es ist dort einfacher, eine
+   Funktion aufzurufen als inline mit Backticks, einfachen und doppelten
+   Anführungszeichen zu arbeiten.
+0. `x-init` ist uns schon aus [anderen Zusammenhängen]() bekannt. Hier wird
+   gleich nach dem Rendern `$watch()` auf den Wert von `x-data.modal`
+   angesetzt und die mitgegebene Callback-Funktion für den Ereignisfall mitgegeben.
+0. Dankenswerterweise kann man auch den vorher gültigen Wert (`old`) in der
+   Callback-Funktion mit einbauen.
+0. Die Codezeile ist wie folgt zu übersetzen: _„Sobald sich der Wert von_
+   `modal` _ändert, nimm den geänderten Wert `cur` und den alten Wert `old` und
+   führe `logModal()` aus – mit diesen Werten als Argumenten.
+
+> [!warning] Bitte beachten!
+> `$watch` lohnt sich nur bei einfachen Javascript-Typen: Zahlen, Strings,
+> Booleans. _Referenztypen_ wie Arrays und Objekte eignen sich dafür __nicht!__
+> Das hängt damit zusammen, dass Referenztypen mit Speicheradressen arbeiten;
+> das einzige, was `$watch()` da als Änderung registrieren kann, ist der
+> Referenzwechsel auf eine neue Speicheradresse.
+>
+> Das heißt: `$watch(myObj.name, ...) würde funktionieren, weil `myObj.name`
+> ein einfacher Datentyp (String) ist, `$watch(myObj, ...) dagegen nicht!
+
 

@@ -1,4 +1,4 @@
-document.addEventListener("alpine:init", () => {
+document.addEventListener('alpine:init', () => {
   Alpine.data("dropdown", () => ({
     open: false,
     message: "Something",

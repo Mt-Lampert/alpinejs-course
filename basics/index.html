@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Alpine.js Course</title>
 
-    <link rel="stylesheet" href="missing.min.css"></link>
-    <script
-      defer
-      src="/assets/alpinejs.min.js"
-    ></script>
-    <script src="app.js"></script>
+    <link rel="stylesheet" type="text/css" href="missing.min.css"></link>
+  <script type="text/javascript" src="./app.js" defer></script>
+  <script
+    type="text/javascript"
+    src="assets/alpinejs.min.js"
+    defer
+  ></script>
 
   </head>
   <body>
@@ -300,11 +301,12 @@
 
 
 
-<!-- HERE WE ARE!! -->
 
 
 
     <!-- Magic Properties -->
+
+
     <!-- $el -->
     <!-- <div x-data x-init="console.log('Init ', $el)"> -->
     <!--   <button @click="console.log($el)">Button</button> -->
@@ -320,29 +322,41 @@
     <!-- <div x-data x-text="$store.currentUser.username"></div> -->
 
     <!-- $watch -->
+    <!-- <script> -->
+    <!-- function logModal(curValue, oldValue) { -->
+    <!--   console.log(`'modal' changed from '${oldValue}' to '${curValue}'`) -->
+    <!-- } -->
+    <!-- </script> -->
     <!-- <div -->
     <!--   x-data="{modal: false}" -->
-    <!--   x-init="$watch('modal', (val, old) => console.log(val, old))" -->
+    <!-- x-init="$watch('modal', (cur, old) => logModal(cur, old))" -->
     <!-- > -->
     <!--   <button @click="modal = !modal">$watch example</button> -->
     <!-- </div> -->
 
     <!-- $dispatch -->
-    <!-- <div x-data @edit="console.log('Edit Clicked')"> -->
-    <!--   <button @click="$dispatch('edit')">Edit</button> -->
+    <!-- <div x-data -->
+    <!--   @yoohoo="console.log('parent: ' + $event.detail.msg)"> -->
+    <!--   <span @yoohoo.window="console.log('sibling: ' + $event.detail.msg)"></span> -->
+    <!--   <button -->
+    <!--     @click="$dispatch('yoohoo', {msg: 'Yoohoo from down under!'})" -->
+    <!--   >Yoohoo!</button> -->
+    <!---->
     <!-- </div> -->
 
     <!-- $nextTick -->
-    <!-- <div x-data="{name: 'Zura'}"> -->
-    <!--   <button -->
-    <!--     @click=" -->
-    <!--       name = 'John'; --> 
-    <!--       $nextTick(() => console.log($refs.p.innerText));" -->
-    <!--   > -->
-    <!--     Change Name -->
-    <!--   </button> -->
-    <!--   <p x-ref="p" x-text="name"></p> -->
-    <!-- </div> -->
+    <div x-data="{name: 'Zura'}">
+      <button
+        @click="
+          name = 'John'; 
+          $nextTick(() => console.log($refs.out.innerText));"
+      >
+         Change Name
+      </button>
+      <p x-ref="out" x-text="name"></p>
+    </div>
+
+<!-- WE ARE HERE! -->
 
     <!-- $root -->
     <!-- <div x-data id="1"> -->

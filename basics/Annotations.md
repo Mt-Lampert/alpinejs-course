@@ -844,4 +844,29 @@ bekommt der zuerst gefundene den Zuschlag.
 _Schön zu wissen:_ mit `x-teleport` funktionieren auch eingebettete Modals.
 Mehr dazu [hier](https://alpinejs.dev/directives/teleport#nesting).
 
+# Magische Instanzen
+
+## Wie man mit `$el` das aktuelle DOM-Element abgreift
+
+> [!abstract]
+> Jedes DOM-Element hat Eigenschaften, auf die wir manchmal zugreifen müssen.
+Dann ist es gut, wenn `$el` einsetzen können und nicht auf
+`document.getElementBy...()` angewiesen sind.
+
+### Beispiel
+
+```html
+<div x-data x-init="console.log('Init ', $el)">
+  <button @click="console.log($el)">Button</button>
+</div>
+```
+
+Hier werden zwei unterschiedliche Elemente auf der konsole ausgeworfen, obwohl
+beide sich selbst mit `$el` verfügbar machen. `$el` liefert die Referenz auf ein vollwertiges DOM-Element zurück – wir könnten also auf alle seine Attribute mit einfachen JavaScript-Methoden zugreifen, z.B. mit `$el.innerHTML`.
+
+## `$ref`
+
+Verweis auf oben: Wie man mit `$ref` [DOM-Elemente kennzeichnet]() und sie
+ansteuert.
+
 

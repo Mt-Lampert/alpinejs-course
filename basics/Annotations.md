@@ -918,4 +918,50 @@ ansteuert.
 > Das heißt: `$watch(myObj.name, ...) würde funktionieren, weil `myObj.name`
 > ein einfacher Datentyp (String) ist, `$watch(myObj, ...) dagegen nicht!
 
+## Nacharbeiten mit $nextTick()
+
+> [!abstract]
+> Manche Dinge sollten erst erledigt werden, wenn alles andere vorher fertig ist. In JavaScript kann man dafür einen [leeren Timeout](https://developer.mozilla.org/en-US/docs/Web/API/setTimeout#description) verwenden; in _AlpineJS_ erreicht man das gleiche mit `$nextTick()`.
+
+### Beispiel ohne `$nextTick`
+
+```html
+<div x-data="{name: 'Zura'}">
+  <button
+    @click="
+      name = 'John'; 
+      console.log($refs.out.innerText);"
+  >
+     Change Name
+  </button>
+  <p x-ref="out" x-text="name"></p>
+</div>
+```
+
+Hier wird also `x-data.name` mit “Zura” initialisiert. Dieser Name erscheint dann im Absatz mit der DOM-Referenz `out`. Soweit klar.
+
+Beim Klick auf den Button wird der Name auf ‘John’ geändert; d.h. auch im Ausgabe-Absatz ändert sich der Name in ‘John’.
+
+Dann aber wird der Name aus dem Ausgabe-Absatz gelesen und nochmal auf der Konsole angezeigt. Jetzt die Preisfrage: Was genau erscheint auf der Konsole?
+
+Richtige Antwort: __Zura!!__ `console.log()` wird nämlich ausgeführt, _bevor_ der Name im Ausgabeabsatz ein Update erfährt! Oder in den Worten von oben: ohne dass vorher alles fertig ist!
+
+### Beispiel mit $nextTick
+
+```html
+<div x-data="{name: 'Zura'}">
+  <button
+    @click="
+      name = 'John'; 
+      $nextTick(() => console.log($refs.out.innerText));"
+  >
+     Change Name
+  </button>
+  <p x-ref="out" x-text="name"></p>
+</div>
+```
+
+Hier erscheint tatsächlich ‘John’ auf der Konsole! Woran liegt das?
+
+`$nextTick()` hat ein Geheimnis: Es ist _asynchron,_ und das bedeutet: Seine Ausführung wird _aufgeschoben,_ bis vorher alles fertig ist, und das bedeutet hier: bis der Name im Ausgabe-Absatz sein Update bekommen hat! Die Ausführung des Callbacks erfolgt also _einen Tick später_ als der Abschluss aller vorher zu leistenden Arbeiten.
 

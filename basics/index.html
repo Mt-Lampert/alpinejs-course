@@ -347,16 +347,16 @@
     <!-- </div> -->
 
     <!-- $nextTick -->
-    <div x-data="{name: 'Zura'}">
-      <button
-        @click="
-          name = 'John'; 
-          $nextTick(() => console.log($refs.out.innerText));"
-      >
-         Change Name
-      </button>
-      <p x-ref="out" x-text="name"></p>
-    </div>
+    <!-- <div x-data="{name: 'Zura'}"> -->
+    <!--   <button -->
+    <!--     @click=" -->
+    <!--       name = 'John';  -->
+    <!--       $nextTick(() => console.log($refs.out.innerText));" -->
+    <!--   > -->
+    <!--      Change Name -->
+    <!--   </button> -->
+    <!--   <p x-ref="out" x-text="name"></p> -->
+    <!-- </div> -->
 
 <!-- WE ARE HERE! -->
 
@@ -374,18 +374,18 @@
     <!-- $data -->
     <!-- <div x-data="dropdown"> -->
     <!--   <div> -->
-    <!--     <button @click="console.log($data.open)">$data</button> -->
+    <!--     <button @click="console.log($data.message)">$data</button> -->
     <!--   </div> -->
     <!-- </div> -->
 
     <!-- $id -->
-    <!-- <div x-data> -->
-    <!--   <div x-id="['text-input']"> -->
-    <!--     <label :for="$id('text-input')" /> -->
-    <!--     <!-1- "text-input-1" -1-> -->
-    <!--     <input type="text" :id="$id('text-input')" /> -->
-    <!--     <!-1- "text-input-1" -1-> -->
-    <!--   </div> -->
-    <!-- </div> -->
+    <div x-data>
+      <div x-id="['text-input']">
+        <label :for="$id('text-input')" />
+        <!-1- "text-input-1" -1->
+        <input type="text" :id="$id('text-input')" />
+        <!-1- "text-input-1" -1->
+      </div>
+    </div>
   </body>
 </html>

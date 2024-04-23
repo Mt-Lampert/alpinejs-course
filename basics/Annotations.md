@@ -85,13 +85,13 @@ document.addEventListener("alpine:init", () => {  // -1-
 ```
 ```html
 <!-- file: index.html -->
-<header>
+<head>
+  <script src="app.js"></script> <!--                -3- -->
   <script
     defer
     src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js"
   ></script>
-  <script src="app.js"></script> <!--                -3- -->
-</header>
+</head>
 
 <!-- Re-usable Data -->
 <div x-data="dropdown"> <!--                         -4- -->
@@ -964,4 +964,112 @@ Richtige Antwort: __Zura!!__ `console.log()` wird nämlich ausgeführt, _bevor_ 
 Hier erscheint tatsächlich ‘John’ auf der Konsole! Woran liegt das?
 
 `$nextTick()` hat ein Geheimnis: Es ist _asynchron,_ und das bedeutet: Seine Ausführung wird _aufgeschoben,_ bis vorher alles fertig ist, und das bedeutet hier: bis der Name im Ausgabe-Absatz sein Update bekommen hat! Die Ausführung des Callbacks erfolgt also _einen Tick später_ als der Abschluss aller vorher zu leistenden Arbeiten.
+
+## Die Wurzel des Components: $root
+
+> [!abstract]
+>
+> `$root` ist einfach nur die Referenz auf das aktuelle Component-Element, also
+> das Element, in dem die aktuellen `x-data` angelegt wurden.  
+
+### Beispiel
+
+```html
+<div x-data id="1">
+  <div>
+    <div x-data id="2">
+      <div>
+        <button @click="console.log($root)">Button</button>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+Welches ist hier das aktuelle Component? Für den Button das nächstliegende, und das ist das mit `id="2"`. Das ist die `$root`.
+
+## $data – x-data als Javascript-Objekt
+
+> [!abstract]
+> Mit `x-data` lässt sich in _AlpineJS_ in 98% aller Fälle schon wunderbar arbeiten. In den übrigen 2% brauchen wir `x-data` als reines JavaScript-Objekt. Dafür gibt es dann `$data`.
+
+### Beispiel
+
+```javascript
+// file: app.js
+document.addEventListener('alpine:init', () => {
+  Alpine.data("dropdown", () => ({
+    open: false,
+    message: "Something",
+
+    toggle() {
+      this.open = !this.open;
+    },
+  }));
+});
+```
+```html
+<!-- file: index.html -->
+<head>
+  <script src="./app.js"></script> 
+  <script
+    defer
+    src="./assets/alpinejs.min.js"
+  ></script>
+</head>
+<body>
+  <div x-data="dropdown">
+    <div>
+      <button @click="console.log($data.message)">$data</button>
+    </div>
+  </div>
+</body>
+```
+
+So viel Code für so wenig Inhalt! 
+
+Jedenfalls sehen wir im `<button>` Element, wie wir das aktuelle `x-data`-Objekt in die Konsolen-Nachricht bekommen und dort auf das `message`-Attribut Zugriff erhalten.
+
+## Automatisch unvergleichlich mit $id 
+
+> [!abstract]
+>
+> $id ist in der Praxis sehr, sehr nützlich, wenn man sich für viele gleichartige Elemente unterschiedliche IDs (für `id="..."`) aus den Fingern saugen muss, um sie unterscheiden zu können:
+
+### Beispiel: Automatische IDs
+
+```html
+<input type="text" :id="$id('text-input')">
+<!-- => id="text-input-1" -->
+ 
+<input type="text" :id="$id('text-input')">
+<!-- => id="text-input-2" -->
+```
+
+Mit `$id()` ist es Sache von _AlpineJS,_ sich die IDs aus den Fingern zu saugen.
+
+### Beispiel: Automatische IDs für dieselbe Gruppe
+
+```html
+<div x-data>
+  <div x-id="['text-input']">
+    <label :for="$id('text-input')" />
+    <!-- => for="text-input-1" -->
+    <input type="text" :id="$id('text-input')" />
+    <!-- => id="text-input-1" -->
+  </div>
+</div>
+
+<div x-data>
+  <div x-id="['text-input']">
+    <label :for="$id('text-input')" />
+    <!-- => for="text-input-2" -->
+    <input type="text" :id="$id('text-input')" />
+    <!-- => id="text-input-2" -->
+  </div>
+</div>
+```
+
+Anders als im Beispiel vorher wird hier mit `x-id` eine _ID-Gruppe_ festgelegt. Effekt: Innerhalb dieser Gruppe bekommen alle „Antragsteller dieselbe ID zugewiesen. Das ist z.B. ebenfalls sehr nützich in `x-for`-Schleifen, wo wir in jeder Iteration mit `x-id` eine neue ID-Gruppe festlegen können.
+
 

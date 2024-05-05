@@ -10,10 +10,11 @@
 
 <body>
   <div id="app"
-    class="bg-blue-100 max-w-7xl mx-auto h-screen flex flex-col items-center justify-between py-8 text-center text-[#2c3e50] selection:bg-green-100">
+    class="bg-blue-100 max-w-7xl mx-auto min-h-screen flex flex-col items-center justify-between py-8 text-center text-[#2c3e50] selection:bg-green-100">
 
+    <!-- Dropdown Menu -->
     <div x-data="{ menu: false }"
-      class="relative w-2/3 flex flex-col gap-8 justify-center bg-amber-800 shadow-amber-900 mt-12 pt-16 pb-40 px-10 rounded-6xl">
+      class="relative w-2/3 flex flex-col gap-8 justify-center bg-red-800 shadow-red-900 mt-12 pt-16 pb-40 px-10 rounded-6xl">
       <h1 class="text-yellow-300 text-3xl font-bold">Dropdown Menu</h1>
       <div class="relative flex justify-center items-center">
         <button @click="menu = !menu" class="block button bg-yellow-300 rounded-md py-3 px-6 text-xl text-orange-800">
@@ -27,8 +28,49 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div x-data="{}"
+      class="relative w-2/3 flex flex-col gap-8 justify-center bg-orange-700 shadow-orange-900 mt-12 pt-16 pb-40 px-10 rounded-6xl">
+      <h1 class="text-yellow-300 text-3xl font-bold">Modal</h1>
+    </div>
+
+    <!-- Tabs -->
+    <div x-data="{}"
+      class="relative w-2/3 flex flex-col gap-8 justify-center bg-yellow-600 shadow-yellow-900 mt-12 pt-16 pb-40 px-10 rounded-6xl">
+      <h1 class="text-yellow-300 text-3xl font-bold">Tabs</h1>
+    </div>
+
+    <!-- Carousel -->
+    <div x-data="{}"
+      class="relative w-2/3 flex flex-col gap-8 justify-center bg-green-700 shadow-green-600 mt-12 pt-16 pb-40 px-10 rounded-6xl">
+      <h1 class="text-yellow-300 text-3xl font-bold">Carousel</h1>
+    </div>
+
+    <!-- Accordion -->
+    <div x-data="{}"
+      class="relative w-2/3 flex flex-col gap-8 justify-center bg-cyan-800 shadow-green-900 mt-12 pt-16 pb-40 px-10 rounded-6xl">
+      <h1 class="text-yellow-300 text-3xl font-bold">Accordion</h1>
+    </div>
+
+    <!-- Notification -->
+    <div x-data="{}"
+      class="relative w-2/3 flex flex-col gap-8 justify-center bg-blue-800 shadow-amber-900 mt-12 pt-16 pb-40 px-10 rounded-6xl">
+      <h1 class="text-yellow-300 text-3xl font-bold">Notifications</h1>
+    </div>
+
+    <!-- Pop-Over -->
+    <div x-data="{}"
+      class="relative w-2/3 flex flex-col gap-8 justify-center bg-purple-800 shadow-amber-900 mt-12 pt-16 pb-40 px-10 rounded-6xl">
+      <h1 class="text-yellow-300 text-3xl font-bold">Pop-Overs</h1>
+    </div>
+
   </div>
   <script type="module" src="./src/main.js"></script>
 </body>
 
 </html>
+
+<!--
+vim: ts=2:sw=2:fdm=indent
+-->

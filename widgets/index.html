@@ -10,20 +10,31 @@
 
 <body>
   <div id="app"
-    class="bg-blue-100 max-w-7xl mx-auto min-h-screen flex flex-col items-center justify-between py-8 text-center text-[#2c3e50] selection:bg-green-100">
+    class="container bg-stone-200 max-w-7xl mx-auto min-h-screen flex flex-col items-center justify-between py-8 text-center text-[#2c3e50] selection:bg-green-100">
 
     <!-- Dropdown Menu -->
     <div x-data="{ menu: false }"
-      class="relative w-2/3 flex flex-col gap-8 justify-center bg-red-800 shadow-red-900 mt-12 pt-16 pb-40 px-10 rounded-6xl">
+      class="relative w-2/3 flex flex-col gap-8 justify-center bg-red-800 shadow-red-900 mt-12 pt-16 pb-60 px-10 rounded-6xl">
       <h1 class="text-yellow-300 text-3xl font-bold">Dropdown Menu</h1>
       <div class="relative flex justify-center items-center">
         <button @click="menu = !menu" class="block button bg-yellow-300 rounded-md py-3 px-6 text-xl text-orange-800">
-          Menu
+          Toggle
         </button>
-        <div x-show="menu" x-transition.duration.750ms @click.outside="menu=false"
-          class="absolute top-16 left-92 bg-yellow-300 p-4 z-10 rounded">
+        <!-- Menu -->
+        <div x-data="{ submenu: false }" x-show="menu" x-transition.duration.750ms @click.outside="menu=false"
+          class="absolute flex flex-col items-start top-16 left-92 bg-yellow-300 w-28 p-4 z-10 rounded">
           <h1 class="text-orange-800 font-bold">Item 1</h1>
-          <h1 class="text-orange-800 font-bold">Item 2</h1>
+          <!-- Sub-Menu box -->
+          <div class="relative flex justify-between w-full" @click="submenu=!submenu">
+            <h1 class="text-orange-800 font-bold">Item 2</h1>
+            <h1 class="text-orange-800 font-bold">&gt;</h1>
+            <div x-show="submenu" x-transition.duration.750ms
+              class="absolute -right-36 bg-yellow-300 w-28 p-4 z-10 rounded">
+              <h1 class="text-orange-800 font-bold">Subitem 1</h1>
+              <h1 class="text-orange-800 font-bold">Subitem 2</h1>
+              <h1 class="text-orange-800 font-bold">Subitem 3</h1>
+            </div>
+          </div>
           <h1 class="text-orange-800 font-bold">Item 3</h1>
         </div>
       </div>

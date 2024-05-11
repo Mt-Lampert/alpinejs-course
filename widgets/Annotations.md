@@ -129,3 +129,21 @@
       Das ist nötig, damit das Ereignis _unabhänig vom aktuellen Focus_
       verarbeitet wird, denn wo der gerade liegt, wissen nur der Browser und
       der liebe Gott – und zwar streng in dieser Reihenfolge!
+
+### Tabs
+
+```html
+```
+
+#### Anmerkungen
+
+1. Der Einsatz von Transitions im Tab-Text machte es nötig, ___drei___ Absätze
+   zu generieren – parallel zu den drei Elementen von `data.tabs`. Grund:
+   Transitions funktionieren in _AlpineJS_ nur mit `x-show`, und das bedeutet,
+   dass jedes Transitions-Element einen Status-Entscheid braucht, damit `x-show`
+   von `false` auf `true` wechselt oder umgekehrt.
+
+
+<!--
+vim: ts=2:sw=2:fdm=indent
+-->

@@ -82,9 +82,34 @@
     </div>
 
     <!-- Tabs -->
-    <div x-data="{}"
-      class="relative w-2/3 flex flex-col gap-8 justify-center bg-yellow-600 shadow-yellow-900 mt-12 pt-16 pb-40 px-10 rounded-6xl">
+    <div x-data="tabs"
+      class="relative w-2/3 flex flex-col gap-8 justify-center bg-yellow-600 shadow-yellow-900 mt-12 py-16 px-10 rounded-6xl">
+
       <h1 class="text-yellow-300 text-3xl font-bold">Tabs</h1>
+
+      <!-- Tabs Frame (for centering) -->
+      <div class="flex flex-col justify-center items-center">
+        <!-- Tabs container -->
+        <div class="w-2/3 p-8 rounded-lg bg-yellow-100">
+          <!-- Title container -->
+          <div class="flex justify-between">
+            <template x-for="tab in tabs">
+              <div class="border border-stone-100 flex-1 bg-white py-2 px-4" @click="toggle(tab.name)"
+                :class="active===tab.name ? 'text-blue-500' : ''">
+                <p x-text="tab.name"></p>
+              </div>
+            </template>
+          </div>
+          <!-- Active-text container -->
+          <div class="bg-white py-4 px-4 mt=4 w-full h-40 rounded-lg text-left">
+            <template x-for="tab in tabs">
+              <p x-text="activeText" x-show="active === tab.name"
+                x-transition:enter="transition ease-out duration-500 delay-600"
+                x-transition:enter-start="opacity-0 translate-x-16" x-transition:enter-end="opacity-1"></p>
+            </template>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Carousel -->

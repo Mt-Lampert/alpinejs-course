@@ -132,16 +132,42 @@
 
 ### Tabs
 
+Im folgenden Beispiel habe ich den Code für nur eine Anmerkung ausgewählt.
+Alles andere sollte durch das Studium von `inde.html` und `src/main.js` klar
+werden.
+
 ```html
+<div class="flex flex-col justify-center items-center">
+  <!-- Tabs container -->
+  <div class="w-2/3 p-8 rounded-lg bg-yellow-100">
+    <!-- Title container -->
+    <div class="flex justify-between">
+      <template x-for="tab in tabs">
+        <div class="border border-stone-100 flex-1 bg-white py-2 px-4" @click="toggle(tab.name)"
+          :class="active===tab.name ? 'text-blue-500' : ''">
+          <p x-text="tab.name"></p>
+        </div>
+      </template>
+    </div>
+    <!-- Active-text container -->
+    <div class="bg-white py-4 px-4 mt=4 w-full h-40 rounded-lg text-left">
+      <template x-for="tab in tabs">
+        <p x-text="activeText" x-show="active === tab.name"
+          x-transition:enter="transition ease-out duration-500 delay-600"
+          x-transition:enter-start="opacity-0 translate-x-16" x-transition:enter-end="opacity-1"></p>
+      </template>
+    </div>
+  </div>
+</div>
 ```
 
 #### Anmerkungen
 
-1. Der Einsatz von Transitions im Tab-Text machte es nötig, ___drei___ Absätze
-   zu generieren – parallel zu den drei Elementen von `data.tabs`. Grund:
-   Transitions funktionieren in _AlpineJS_ nur mit `x-show`, und das bedeutet,
-   dass jedes Transitions-Element einen Status-Entscheid braucht, damit `x-show`
-   von `false` auf `true` wechselt oder umgekehrt.
+1. Der Einsatz von Transitions im _Active-text container machte es nötig,
+   ___drei___ Absätze zu generieren – parallel zu den drei Elementen von
+   `data.tabs`. Grund: Transitions funktionieren in _AlpineJS_ nur mit `x-show`,
+   und das bedeutet, dass jedes Transitions-Element einen Status-Entscheid
+   braucht, damit `x-show` von `false` auf `true` wechselt oder umgekehrt.
 
 
 <!--

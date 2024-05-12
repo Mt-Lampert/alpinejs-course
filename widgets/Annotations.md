@@ -169,6 +169,31 @@ werden.
    und das bedeutet, dass jedes Transitions-Element einen Status-Entscheid
    braucht, damit `x-show` von `false` auf `true` wechselt oder umgekehrt.
 
+### Carousel
+
+Das war eine Sensation! Ich habe alles angewendet, was ich bislang hier im
+Verlauf dieses Projekts gelernt habe, und brauchte dann nicht einmal das
+Original-Video. Hab die Vorlage sogar noch dort verbessert, wo sie im Original
+versagt hat!
+
+1. Ich habe von Anfang an mit einer Liste aus Daten-Objekten gearbeitet (`cars`
+   in `Alpine.data('carousel)`). Damit hatte ich immer alles beieinander, was
+   ich für das Carousel brauchte.
+0. Drei Mal [!!!] bin ich diese Datenliste im Markup mit `x-for` durchlaufen,
+   zwei Mal, um alle Elemente mit `x-show` anzuzeigen und wieder zu verbergen,
+   je nachdem ob die aktuelle Index-Nummer mit `currentIndex` übereinstimmt
+   oder nicht.
+0. `x-show` lieferte nun das Ereignis, das nötig war, um _transitions_ zu
+   triggern und das Bild und den Begleittext mit kleiner Animation bei jeder
+   Änderung einfliegen zu lassen.
+0. Zum Schluss habe ich 2 Navigations-Items als Schwebe-Buttons über dem Bild
+   angelegt:
+     - `relativ`, `absolute`, `top-*`, `left/right-*` `z-*` haben für diesen Job
+       wieder fantastisch zusammengespielt.
+     - Die [Heroicons](https://heroicons.com/solid) haben wirklich alles, was man
+       für den normalen Hausgebrauch an Bildern benötigt. Sie haben die Vorlage
+       geliefert für die Navigations-Buttons.
+     - Das Nachformatieren der Icons ging überraschend sauber!
 
 <!--
 vim: ts=2:sw=2:fdm=indent

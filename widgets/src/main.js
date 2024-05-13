@@ -78,6 +78,53 @@ document.addEventListener("alpine:init", () => {
         this.currentIndex += 1
     }
   }))
+
+  Alpine.data("accordion", () => ({
+    items: [
+      {
+        term: "Intuitive",
+        desc: "Living and thinking from the 'guts'. Easy to excite, hard to satisfy. Impatient."
+      },
+      {
+        term: "Sensing",
+        desc: "Living in the concrete side of the world. Needs all 5 senses to be satisfied. Hard to excite. Able to enjoy."
+      },
+      {
+        term: "Extrovert",
+        desc: "Cannot live without the outside world as feedback source and energy source. Social. Talkative. Being alone feels like torture",
+      },
+      {
+        term: "Introvert",
+        desc: "Needs a healthy and thriving inner world as source of truth. Prefers living secluded. Silent, but can learn ‘perfect routines’ for the outside world. Being alone feels like recharging.",
+      },
+      {
+        term: "Feeler",
+        desc: "Needs everything to ‘feel right’. Great empathy. Highly sensitive to atmosphere. Loves to be mesmerised by ‘bliss’. Social tension is torture."
+      },
+      {
+        term: "Thinker",
+        desc: "Needs to feel in control; dissociates from intense emotions. Prefers to be logical, analytical and ‘sensible’. Ivory tower tendency",
+      },
+      {
+        term: "Deductive",
+        desc: "Sees the world as some kind of ‘clockwork’ with strong rules, laws and principles. Organisation and planning is everything. Prefers judging over exploring. Love of details.", 
+      },
+      { 
+        term: "Inductive",
+        desc: "Sees the world as ‘one big grab bag’, as never-ending source of opportunities and exploration. For this type success trumps laws and principles. Solves problems with crazy, but ingenious ideas. ‘Take what you can, give nothing back!’ attitude",
+      },
+    ],
+
+    activeTerm: null,
+
+    expand(term) {
+      if (this.activeTerm && term === this.activeTerm)
+        this.activeTerm = null
+      else
+        this.activeTerm = term
+    },
+
+  }))
 })
 
  
